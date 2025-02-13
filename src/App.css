@@ -22,5 +22,8 @@
 }
 .shade {
   height: 160px;
+  
+}
+.shade-container{
   width: 100%;
 }

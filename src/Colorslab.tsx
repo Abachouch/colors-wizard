@@ -6,7 +6,7 @@ import chroma from "chroma-js";
 
 export const ColorsLab = () => {
   const [hex, setHex] = useState("#3498db"); // Default color
-  const [hsl, setHsl] = useState<[number, number, number]>();
+  const [hsl, setHsl] = useState<number[]>([0, 0, 0]);
   const [tints, setTints] = useState<string[]>([]);
   const [shades, setShades] = useState<string[]>([]);
   const [themeClrs, setThemeClrs] = useState<{}>({});
@@ -37,24 +37,82 @@ export const ColorsLab = () => {
     return { tints, shades };
   }
 
+  function handleHslChange(type: number, value: number) {
+    let newHsl = [...hsl];
+    newHsl[type] = value;
+    const newHex = chroma.hsl(newHsl[0], newHsl[1], newHsl[2]).hex();
+    setHsl(newHsl);
+    setHex(newHex);
+  }
+
   return (
     <div>
       <header className="header">
-        <input
-          type="text"
-          value={hex}
-          onChange={(e) => setHex(e.target.value)}
-        />
-        hsl : {hsl?.join(", ")}
-        <div className="selectedColor" style={{ backgroundColor: hex }}></div>
+        <div className="in">
+          <input
+            type="text"
+            value={hex}
+            onChange={(e) => setHex(e.target.value)}
+          />
+          <div className="selectedColor" style={{ backgroundColor: hex }}></div>
+        </div>
+        <div className="slider">
+          {/* HSL Adjusters */}
+          <div className="mb-4">
+            <label className="block">Hue: {Math.round(hsl[0])}°</label>
+            <input
+              type="range"
+              min="0"
+              max="360"
+              value={hsl[0]}
+              onChange={(e) => handleHslChange(0, Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block">
+              Saturation: {Math.round(hsl[1] * 100)}%
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={hsl[1]}
+              onChange={(e) => handleHslChange(1, Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block">
+              Lightness: {Math.round(hsl[2] * 100)}%
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={hsl[2]}
+              onChange={(e) => handleHslChange(2, Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+        </div>
       </header>
 
       <h3>shades</h3>
       <div className="results-section">
         <div className="shades">
           {shades.map((shade, i) => (
-            <div key={i} className="shade" style={{ backgroundColor: shade }}>
+            <div className="shade-container">
               {shade}
+              <div
+                key={i}
+                className="shade"
+                style={{ backgroundColor: shade }}
+              ></div>
             </div>
           ))}
         </div>
