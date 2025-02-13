@@ -45,6 +45,7 @@ export const ColorsLab = () => {
           value={hex}
           onChange={(e) => setHex(e.target.value)}
         />
+        hsl : {hsl?.join(", ")}
         <div className="selectedColor" style={{ backgroundColor: hex }}></div>
       </header>
 
